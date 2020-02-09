@@ -5,9 +5,12 @@ import torch.optim
 import configparser
 
 def main():
-	dir = "/home/tomoki/workspace/seq2seq/"
-	print('hello world')
-	print('git test')
+	config = configparser.ConfigParser()
+	config.read('config/default.conf', encoding='utf-8')
+	defaults = config['Defaults']
+	batchsize = defaults.get('--batchsize')
+	data_dir = defaults.get('--data_dir')
+	output_dir = defaults.get('--out')
 
 if __name__ == '__main__':
 	main()
