@@ -6,7 +6,7 @@ import configparser
 
 def main():
 	dir = "/home/tomoki/workspace/seq2seq/"
-	print('test')	
+	print('hello world')
 
 if __name__ == '__main__':
 	main()
