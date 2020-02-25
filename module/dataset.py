@@ -1,18 +1,14 @@
-class Dataset:
-    def __init__(self, source, target):
-        self.source_lang = source.file_pass
-        self.target_lang = target.file_pass
+from pathlib import Path
+import torch
+import torch.utils.data as data
 
-        with open(self.source_lang, 'r') as f:
-            self.source_lines = f.readlines()
+class MyDataset(data.Dataset):
+	
+	def __init__(self, transforms):
+		
+	def __getitem__(self):
 
-        with open(self.target_lang, 'r') as f:
-            self.target_lines = f.readlines()
+	def __len__(self):
+		
 
-    def load(self):
-        for line in zip(self.source_lines, self.target_lines):
-            print(line[0])
-            exit()
-
-        return line
-
+def transform():
