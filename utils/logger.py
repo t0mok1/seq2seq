@@ -1,6 +1,6 @@
 from logging import getLogger, StreamHandler, Formatter, FileHandler, DEBUG
 
-def get_logger(path):
+def getMyLogger(path):
 	logger = getLogger('__name__')
 	logger.setLevel(DEBUG)
 
