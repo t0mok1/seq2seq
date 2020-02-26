@@ -1,3 +1,4 @@
+
 from pathlib import Path
 from collections import Counter
 import torch
@@ -10,6 +11,8 @@ class MyDataset(data.Dataset):
 		self.trg_vocab = copy.copy(trg_vocab)
 		self.srcSentences = list()
 		self.trgSentences = list()
+
+		self.max_length = 0
 		
 		max_len = 0
 		with Path(srcPath).open('r') as fs, Path(trgPath).open('r') as ft:
@@ -42,7 +45,7 @@ class MyDataset(data.Dataset):
 		return source, target, ground
 
 	def __len__(self):
-		return len(self.src_sentences)
+		return len(self.srcSentences)
 
 	def convert_words2ids(self, words, vocab, unk, sos=None, eos=None):
 
@@ -52,7 +55,27 @@ class MyDataset(data.Dataset):
 		if eos is not None:
 			word_ids.append(eos)
 
+		return word_ids
 
+def collate_fn(data):
+	sources, targets, grounds = zip(*data)
+	src_lengths = [len(src) for src in sources]
+	trg_lengths = [len(trg) for trg in targets]
+	_sources = torch.zeros(len(sources), max(src_lengths)).long()
+	_targets = torch.zeros(len(targets), max(trg_lengths)).long()
+	_tpairs = torch.zeros(len(grounds), max(trg_lengths)).long()
+
+	for i, src in enumerate(sources):
+		end = src_lengths[i]
+		_sources[i, :end] = src
+	
+	for i, (trg, teach) in enumerate(zip(targets, grounds)):
+		end = trg_lengths[i]
+		_targets[i, :end] = trg
+		_tpairs[i, :end] = teach
+
+	return _sources, _targets, _tpairs
+	
 def get_vocab(src_path, trg_path, src_freq = 1, trg_freq = 1):
 	src_file = Path(src_path)
 	trg_file = Path(trg_path)
