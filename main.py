@@ -29,11 +29,8 @@ def main():
 
 	srcVocab, trgVocab = get_vocab(trainSrcPath, trainTrgPath, src_freq=1, trg_freq=1)
 
-	trainDataset = MyDataset(trainSrcPath, trainTrgPath, srcVocab, trgVocab)
-	trainLoader = data.DataLoader(dataset=trainDataset, batch_size=batchsize, shuffle=True, num_workers=0, collate_fn=collate_fn)
-
-	trainMaxLength = trainLoader.dataset.max_length
-	print(maxLength)
+	train_dataset = MyDataset(trainSrcPath, trainTrgPath, srcVocab, trgVocab)
+	train_loader = data.DataLoader(dataset=train_dataset, batch_size=batchsize, shuffle=True, num_workers=0, collate_fn=collate_fn)
 
 if __name__ == '__main__':
 	main()

@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from collections import Counter
 import torch
@@ -6,21 +5,21 @@ import torch.utils.data as data
 import copy
 
 class MyDataset(data.Dataset):
-	def __init__(self, srcPath, trgPath, src_vocab, trg_vocab):
+	def __init__(self, src_path, trg_path, src_vocab, trg_vocab):
 		self.src_vocab = copy.copy(src_vocab)
 		self.trg_vocab = copy.copy(trg_vocab)
-		self.srcSentences = list()
-		self.trgSentences = list()
+		self.src_sentences = list()
+		self.trg_sentences = list()
 
 		self.max_length = 0
 		
 		max_len = 0
-		with Path(srcPath).open('r') as fs, Path(trgPath).open('r') as ft:
+		with Path(src_path).open('r') as fs, Path(trg_path).open('r') as ft:
 			for src, trg in zip(fs, ft):
 				_src = src.strip().split()
 				_trg = trg.strip().split()
-				self.srcSentences.append(_src)
-				self.trgSentences.append(_trg)
+				self.src_sentences.append(_src)
+				self.trg_sentences.append(_trg)
 
 				if len(_src) > max_len:
 					max_len = len(_src)
@@ -28,8 +27,8 @@ class MyDataset(data.Dataset):
 				self.max_length = max_len + 1 #<eos>分追加
 
 	def __getitem__(self, index):
-		src_words = self.srcSentences[index]
-		trg_words = self.trgSentences[index]
+		src_words = self.src_sentences[index]
+		trg_words = self.trg_sentences[index]
 
 		source = self.convert_words2ids(src_words, self.src_vocab, \
 										self.src_vocab['<unk>'], eos=self.src_vocab['<eos>'])
@@ -45,7 +44,7 @@ class MyDataset(data.Dataset):
 		return source, target, ground
 
 	def __len__(self):
-		return len(self.srcSentences)
+		return len(self.src_sentences)
 
 	def convert_words2ids(self, words, vocab, unk, sos=None, eos=None):
 
