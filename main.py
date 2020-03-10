@@ -1,20 +1,19 @@
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim
 import configparser
 from pathlib import Path
 import torch.utils.data as data
 
-from logging import getLogger, StreamHandler, Formatter, FileHandler, DEBUG
 from utils.logger import getMyLogger
 from utils.loader import MyDataset, get_vocab, collate_fn
+
+from module.model import Encoder, Decoder
 
 def main():
     config = configparser.ConfigParser()
     config.read('config/default.conf', encoding='utf-8')
     defaults = config['Defaults']
-    batchsize = defaults.getint('--batchsize')
+    batchsize = defaults.getint('--batchSize')
+    hiddenSize = defaults.getint('--hiddenSize')
     dataDir = defaults.get('--data_dir')
     outputDir = defaults.get('--out')
 
@@ -37,10 +36,8 @@ def main():
     logger.debug('target vocab size : {}'.format(len(trg_vocab)))
     logger.debug('max length : {}'.format(maxLen))
 
-    for (source, target, _) in train_loader:
-        print(source.size())
-        print(torch.transpose(source, 0, 1).size())
-        exit()
+    encoder = Encoder(hiddenSize, len(src_vocab), batchsize)
+    decoder = Decoder(hiddenSize, len(trg_vocab), batchsize)
 
 if __name__ == '__main__':
     main()
