@@ -56,6 +56,10 @@ class MyDataset(data.Dataset):
 
 		return word_ids
 
+## ミニバッチの形を同じにする。じゃないとエラーになる。
+## ミニバッチに入る文の最大文長でまずzeroテンソルを作る。
+## その後、各文の長さだけゼロテンソルの中身を上書きする。
+## こうすることで、ミニバッチの最大文長でパディング処理できる。
 def collate_fn(data):
 	sources, targets, grounds = zip(*data)
 	src_lengths = [len(src) for src in sources]

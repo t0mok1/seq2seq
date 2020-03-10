@@ -27,10 +27,15 @@ def main():
 	logger.debug('trainSrcPath : {}'.format(trainSrcPath))
 	logger.debug('trainTrgPath : {}'.format(trainTrgPath))
 
-	srcVocab, trgVocab = get_vocab(trainSrcPath, trainTrgPath, src_freq=1, trg_freq=1)
+	src_vocab, trg_vocab = get_vocab(trainSrcPath, trainTrgPath, src_freq=1, trg_freq=1)
 
-	train_dataset = MyDataset(trainSrcPath, trainTrgPath, srcVocab, trgVocab)
+	train_dataset = MyDataset(trainSrcPath, trainTrgPath, src_vocab, trg_vocab)
 	train_loader = data.DataLoader(dataset=train_dataset, batch_size=batchsize, shuffle=True, num_workers=0, collate_fn=collate_fn)
+	maxLen =train_dataset.max_length
+
+	logger.debug('source vocab size : {}'.format(len(src_vocab)))
+	logger.debug('target vocab size : {}'.format(len(trg_vocab)))
+	logger.debug('max length : {}'.format(maxLen))
 
 if __name__ == '__main__':
 	main()
